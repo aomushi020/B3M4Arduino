@@ -1,0 +1,12 @@
+# Syntax Coloring Map For B3M
+
+# Library (KEYWORD3)
+B3M	KEYWORD3
+
+# Datatypes (KEYWORD1)
+
+# Methods and Functions (KEYWORD2)
+
+# Instances (KEYWORD2)
+
+# Constants (LITERAL1)
