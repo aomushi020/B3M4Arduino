@@ -140,18 +140,23 @@
 
 class B3M{
     public:
-        B3M(HardwareSerial* b3mSerialPointer_, uint8_t enPin_);
-        B3M(HardwareSerial* b3mSerialPointer_, uint8_t enPin_, uint32_t baudrate_, uint32_t timeout_);
-        B3M(HardwareSerial* b3mSerialPointer_, uint8_t enPin_, uint8_t rxPin_, uint8_t txPin_, uint32_t baudrate_, uint32_t timeout_);
+        B3M(HardwareSerial *serialPointer_, uint8_t enPin_);
+        B3M(HardwareSerial *serialPointer_, uint8_t enPin_, uint32_t baudrate_, uint32_t timeout_);
+        B3M(HardwareSerial *serialPointer_, uint8_t enPin_, uint8_t rxPin_, uint8_t txPin_, uint32_t baudrate_, uint32_t timeout_);
         void begin(void);
 
         // Basic Commands
         // uint8_t load(uint8_t id_, uint8_t option_);
+        // void load(uint8_t *id_, uint8_t option_, uint8_t value_);
         // uint8_t save(uint8_t id_, uint8_t option_);
+        // void save(uint8_t *id_, uint8_t option_, uint8_t value_);
         // uint8_t read(uint8_t id_, uint8_t option_, uint8_t address_, uint8_t length_);
-        // uint8_t write(uint8_t id_, uint8_t option_, uint8_t address_, uint8_t length_);
-        // uint8_t reset(uint8_t id_);
-        // uint8_t position(uint8_t id_, uint8_t );
+        // uint8_t write(uint8_t id_, uint8_t option_, uint8_t *data, uint8_t address_, uint8_t length_);
+        // void write(uint8_t *id_, uint8_t option_, uint8_t *data, uint8_t address_, uint8_t length_, uint8_t value_);
+        void reset(uint8_t id_, uint8_t option_, uint8_t time_);
+        void reset(uint8_t *id_, uint8_t option_, uint8_t time_, uint8_t value_);
+        uint8_t position(uint8_t id_, uint8_t option_, uint16_t position_, uint16_t time_);
+        // void position(uint8_t *id_, uint8_t option_, uint16_t *position_, uint16_t time_, uint8_t value_);
 
     protected:
         HardwareSerial *b3mSerial_;

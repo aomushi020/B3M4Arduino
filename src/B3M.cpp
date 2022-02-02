@@ -4,12 +4,12 @@
     https://github.com/aomushi020/B3M4Arduino
     This library is released under the MIT license.
 */
-#include<Arduino.h>
-#include"B3M.h"
+#include "Arduino.h"
+#include "B3M.h"
 
 // public members
-B3M::B3M(HardwareSerial* b3mSerialPointer_, uint8_t enPin_){
-    b3mSerial_ = b3mSerialPointer_;
+B3M::B3M(HardwareSerial *serialPointer_, uint8_t enPin_) {
+    b3mSerial_ = serialPointer_;
     b3mEnPin_ = enPin_;
     b3mTxPin_ = 0;
     b3mRxPin_ = 0;
@@ -17,8 +17,8 @@ B3M::B3M(HardwareSerial* b3mSerialPointer_, uint8_t enPin_){
     b3mTimeout_ = 0;
 }
 
-B3M::B3M(HardwareSerial* b3mSerialPointer_, uint8_t enPin_, uint32_t baudrate_, uint32_t timeout_){
-    b3mSerial_ = b3mSerialPointer_;
+B3M::B3M(HardwareSerial *serialPointer_, uint8_t enPin_, uint32_t baudrate_, uint32_t timeout_) {
+    b3mSerial_ = serialPointer_;
     b3mEnPin_ = enPin_;
     b3mTxPin_ = 0;
     b3mRxPin_ = 0;
@@ -26,8 +26,8 @@ B3M::B3M(HardwareSerial* b3mSerialPointer_, uint8_t enPin_, uint32_t baudrate_, 
     b3mTimeout_ = timeout_;
 }
 
-B3M::B3M(HardwareSerial* b3mSerialPointer_, uint8_t enPin_, uint8_t rxPin_, uint8_t txPin_, uint32_t baudrate_, uint32_t timeout_){
-    b3mSerial_ = b3mSerialPointer_;
+B3M::B3M(HardwareSerial *serialPointer_, uint8_t enPin_, uint8_t rxPin_, uint8_t txPin_, uint32_t baudrate_, uint32_t timeout_) {
+    b3mSerial_ = serialPointer_;
     b3mEnPin_ = enPin_;
     b3mTxPin_ = txPin_;
     b3mRxPin_ = rxPin_;
@@ -35,39 +35,101 @@ B3M::B3M(HardwareSerial* b3mSerialPointer_, uint8_t enPin_, uint8_t rxPin_, uint
     b3mTimeout_ = timeout_;
 }
 
-void B3M::begin(void){
-    if(b3mTxPin_ && b3mRxPin_){
+void B3M::begin(void) {
+    if (b3mTxPin_ || b3mRxPin_) {
         b3mSerial_->begin(b3mBaudrate_, SERIAL_8N1, b3mRxPin_, b3mTxPin_);
         b3mSerial_->setTimeout(b3mTimeout_);
-    }else if(b3mBaudrate_ && b3mTimeout_){
+    } else if (b3mBaudrate_ || b3mTimeout_) {
         b3mSerial_->begin(b3mBaudrate_, SERIAL_8N1);
         b3mSerial_->setTimeout(b3mTimeout_);
-    }else{
+    } else {
         b3mSerial_->begin(B3M_DEFAULT_BAUDRATE, SERIAL_8N1);
     }
     pinMode(b3mEnPin_, OUTPUT);
 }
 
+// uint8_t B3M::load(uint8_t id_, uint8_t option_){
+//     return 0;
+// }
+
+// void B3M::load(uint8_t *id_, uint8_t option_, uint8_t value_){
+
+// }
+// uint8_t B3M::save(uint8_t id_, uint8_t option_){
+//     return 0;
+// }
+// void B3M::save(uint8_t *id_, uint8_t option_, uint8_t value_){
+
+// }
+// uint8_t B3M::read(uint8_t id_, uint8_t option_, uint8_t address_, uint8_t length_){
+//     return 0;
+// }
+// uint8_t B3M::write(uint8_t id_, uint8_t option_, uint8_t *data, uint8_t address_, uint8_t length_){
+//     return 0;
+// }
+// void B3M::write(uint8_t *id_, uint8_t option_, uint8_t *data, uint8_t address_, uint8_t length_, uint8_t value_){
+
+// }
+void B3M::reset(uint8_t id_, uint8_t option_, uint8_t time_){
+    uint8_t b3mFormat[6];
+    b3mFormat[0] = 0x06;
+    b3mFormat[1] = B3M_RESET;
+    b3mFormat[2] = option_;
+    b3mFormat[3] = id_;
+    b3mFormat[4] = time_;
+    b3mFormat[5] = b3mCheckSum_(b3mFormat, 0x05);
+    b3mSend_(b3mFormat, 0x06);
+}
+void B3M::reset(uint8_t *id_, uint8_t option_, uint8_t time_, uint8_t value_){
+    uint8_t b3mFormat[value_ + 5], b3m_i;
+    b3mFormat[0] = 0x06;
+    b3mFormat[1] = B3M_RESET;
+    b3mFormat[2] = option_;
+    for(b3m_i=3;b3m_i<value_+3;b3m_i++){
+        b3mFormat[b3m_i] = *id_;
+        id_++;
+    }
+    b3mFormat[b3m_i+1] = time_;
+    b3mFormat[b3m_i+2] = b3mCheckSum_(b3mFormat, b3m_i+3);
+    b3mSend_(b3mFormat, b3m_i+4);
+}
+
+uint8_t B3M::position(uint8_t id_, uint8_t option_, uint16_t position_, uint16_t time_){
+    uint8_t b3mFormat[9];
+    b3mFormat[0] = 0x09;
+    b3mFormat[1] = B3M_POSITION;
+    b3mFormat[2] = option_;
+    b3mFormat[3] = id_;
+    b3mFormat[4] = lowByte(position_);
+    b3mFormat[5] = highByte(position_);
+    b3mFormat[6] = lowByte(time_);
+    b3mFormat[7] = highByte(time_);
+    b3mFormat[8] = b3mCheckSum_(b3mFormat, 0x08);
+    b3mSend_(b3mFormat, 0x09);
+    return 0;
+}
+// void B3M::position(uint8_t *id_, uint8_t option_, uint16_t *position_, uint16_t time_, uint8_t value_){
+
+// }
 
 // protected members
 HardwareSerial *b3mSerial_;
 uint8_t b3mEnPin_, b3mTxPin_, b3mRxPin_;
 uint32_t b3mBaudrate_, b3mTimeout_;
 
-uint8_t B3M::b3mCheckSum_(uint8_t *send_formats_, uint8_t bytes_){
+uint8_t B3M::b3mCheckSum_(uint8_t *send_formats_, uint8_t bytes_) {
     uint8_t checkSum = 0, b3m_i = 0;
 
-    for(b3m_i = 0;b3m_i<bytes_;b3m_i++){
+    for (b3m_i = 0; b3m_i < bytes_; b3m_i++) {
         checkSum += *send_formats_;
         send_formats_++;
     }
     return checkSum;
 }
 
-void B3M::b3mSend_(uint8_t *send_formats_, uint8_t bytes_){
-
+void B3M::b3mSend_(uint8_t *send_formats_, uint8_t bytes_) {
 }
 
-uint8_t B3M::b3mRead_(uint8_t bytes_){
+uint8_t B3M::b3mRead_(uint8_t bytes_) {
     return 0;
 }
