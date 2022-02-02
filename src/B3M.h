@@ -28,6 +28,28 @@
 #define B3M_GET_UART    0x83
 #define B3M_GET_COMMAND 0x84
 
+// Servo Parameter Value
+// Servo Option 0x27
+#define B3M_SERVO_OPTION_NORMAL     0x00
+#define B3M_SERVO_OPTION_CLONE      0x40
+#define B3M_SERVO_OPTION_REVERSE    0xC0
+// Mode Select  0x28
+// Move Mode
+#define B3M_MOVE_MODE_NORMAL        0x00
+#define B3M_MOVE_MODE_FREE          0x02
+#define B3M_MOVE_MODE_HOLD          0x03
+// Control Mode
+#define B3M_CONTROL_MODE_POSITION   0x00
+#define B3M_CONTROL_MODE_SPEED      0x04
+#define B3M_CONTROL_MODE_TORQUE     0x08
+#define B3M_CONTROL_MODE_FFC        0x0C
+// Control Type 0x29
+#define B3M_CONTROL_TYPE_LINEAR     0x00
+#define B3M_CONTROL_TYPE_EVEN       0x01
+#define B3M_CONTROL_TYPE_CUBIC      0x03
+#define B3M_CONTROL_TYPE_QUARTIC    0x04
+#define B3M_CONTROL_TYPE_FIFTH      0x05
+
 // B3M Registor Addresses
 // SYSTEM
 #define B3M_SYS_ID                          0x00
@@ -54,7 +76,7 @@
 #define B3M_SYS_MOTOR_CCW_ROTATE_RATE       0x23
 // Servo
 #define B3M_SRV_OPTION              0x27
-#define B3M_SRV_MODE_CHANGE         0x28
+#define B3M_SRV_MODE_SET            0x28
 #define B3M_SRV_CONTROL_TYPE        0x29
 #define B3M_SRV_TARGET_POSITION     0x2A
 #define B3M_SRV_CURRENT_POSITION    0x2C
@@ -119,14 +141,16 @@ class B3M{
         B3M(HardwareSerial* b3mSerialPointer_, uint8_t enPin_, uint32_t baudrate_, uint32_t timeout_);
         void begin(void);
         // Single Mode
-        // uint8_t
+        uint8_t load(uint8_t id_, uint8_t command_, uint8_t option_);
+        uint8_t save(uint8_t id_, uint8_t command_, uint8_t option_);
+        uint8_t read(uint8_t id_, uint8_t command_, uint8_t option_, uint8_t address_, uint8_t length);
+        
         // Multi Mode
 
     protected:
-        uint8_t singleSend_(uint8_t *send_format_);
-        uint8_t multiSend_(uint8_t *send_formats_, uint8_t bytes_);
+        uint8_t b3mSend_(uint8_t *send_formats_, uint8_t bytes_);
         HardwareSerial *b3mSerial_;
         uint8_t checkSum_(uint8_t *send_format_);
-}
+};
 
 #endif
