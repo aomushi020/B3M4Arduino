@@ -119,13 +119,13 @@ class B3M{
         B3M(HardwareSerial* b3mSerialPointer_, uint8_t enPin_, uint32_t baudrate_, uint32_t timeout_);
         void begin(void);
         // Single Mode
-        uint8_t
+        // uint8_t
         // Multi Mode
 
     protected:
         uint8_t singleSend_(uint8_t *send_format_);
         uint8_t multiSend_(uint8_t *send_formats_, uint8_t bytes_);
-        HardwareSerial *b3mSerial_
+        HardwareSerial *b3mSerial_;
         uint8_t checkSum_(uint8_t *send_format_);
 }
 
