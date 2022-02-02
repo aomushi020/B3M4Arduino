@@ -53,3 +53,21 @@ void B3M::begin(void){
 HardwareSerial *b3mSerial_;
 uint8_t b3mEnPin_, b3mTxPin_, b3mRxPin_;
 uint32_t b3mBaudrate_, b3mTimeout_;
+
+uint8_t B3M::b3mCheckSum_(uint8_t *send_formats_, uint8_t bytes_){
+    uint8_t checkSum = 0, b3m_i = 0;
+
+    for(b3m_i = 0;b3m_i<bytes_;b3m_i++){
+        checkSum += *send_formats_;
+        send_formats_++;
+    }
+    return checkSum;
+}
+
+void B3M::b3mSend_(uint8_t *send_formats_, uint8_t bytes_){
+
+}
+
+uint8_t B3M::b3mRead_(uint8_t bytes_){
+    return 0;
+}

@@ -157,8 +157,9 @@ class B3M{
         HardwareSerial *b3mSerial_;
         uint8_t b3mEnPin_, b3mTxPin_, b3mRxPin_;
         uint32_t b3mBaudrate_, b3mTimeout_;
-        // uint8_t checkSum_(uint8_t *send_format_);
-        // uint8_t b3mSend_(uint8_t *send_formats_, uint8_t bytes_);
+        uint8_t b3mCheckSum_(uint8_t *send_formats_, uint8_t bytes_);
+        void b3mSend_(uint8_t *send_formats_, uint8_t bytes_);
+        uint8_t b3mRead_(uint8_t bytes_);
 };
 
 #endif
