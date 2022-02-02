@@ -8,6 +8,9 @@
 #ifndef B3M_h
 #define B3M_h
 
+// B3M Default Baudrate
+#define B3M_DEFAULT_BAUDRATE 115200
+
 // B3M Commands
 #define B3M_LOAD        0x01
 #define B3M_SAVE        0x02
@@ -139,18 +142,23 @@ class B3M{
     public:
         B3M(HardwareSerial* b3mSerialPointer_, uint8_t enPin_);
         B3M(HardwareSerial* b3mSerialPointer_, uint8_t enPin_, uint32_t baudrate_, uint32_t timeout_);
+        B3M(HardwareSerial* b3mSerialPointer_, uint8_t enPin_, uint8_t txPin_, uint8_t rxPin_, uint32_t baudrate_, uint32_t timeout_);
         void begin(void);
-        // Single Mode
-        uint8_t load(uint8_t id_, uint8_t command_, uint8_t option_);
-        uint8_t save(uint8_t id_, uint8_t command_, uint8_t option_);
-        uint8_t read(uint8_t id_, uint8_t command_, uint8_t option_, uint8_t address_, uint8_t length);
-        
-        // Multi Mode
+
+        // Basic Commands
+        uint8_t load(uint8_t id_, uint8_t option_);
+        uint8_t save(uint8_t id_, uint8_t option_);
+        uint8_t read(uint8_t id_, uint8_t option_, uint8_t address_, uint8_t length_);
+        uint8_t write(uint8_t id_, uint8_t option_, uint8_t address_, uint8_t length_);
+        uint8_t reset(uint8_t id_);
+        uint8_t position(uint8_t id_, uint8_t );
 
     protected:
-        uint8_t b3mSend_(uint8_t *send_formats_, uint8_t bytes_);
         HardwareSerial *b3mSerial_;
+        uint8_t b3mEnPin_, b3mTxPin_, b3mRxPin_;
+        uint32_t b3mBaudrate_, b3mTimeout_;
         uint8_t checkSum_(uint8_t *send_format_);
+        uint8_t b3mSend_(uint8_t *send_formats_, uint8_t bytes_);
 };
 
 #endif
