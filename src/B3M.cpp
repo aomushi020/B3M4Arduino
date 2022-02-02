@@ -4,8 +4,8 @@
     https://github.com/aomushi020/B3M4Arduino
     This library is released under the MIT license.
 */
-#include "Arduino.h"
 #include "B3M.h"
+#include "Arduino.h"
 
 // public members
 B3M::B3M(HardwareSerial *serialPointer_, uint8_t enPin_) {
@@ -46,41 +46,42 @@ void B3M::begin(void) {
         b3mSerial_->begin(B3M_DEFAULT_BAUDRATE, SERIAL_8N1);
     }
     pinMode(b3mEnPin_, OUTPUT);
+    digitalWrite(b3mEnPin_, LOW);
 }
 
 // uint8_t B3M::load(uint8_t id_, uint8_t option_){
 //     return 0;
 // }
 
-// void B3M::load(uint8_t *id_, uint8_t option_, uint8_t value_){
+// void B3M::load(uint8_t *id_, uint8_t option_, uint8_t length_){
 
 // }
 // uint8_t B3M::save(uint8_t id_, uint8_t option_){
 //     return 0;
 // }
-// void B3M::save(uint8_t *id_, uint8_t option_, uint8_t value_){
+// void B3M::save(uint8_t *id_, uint8_t option_, uint8_t length_){
 
 // }
 // uint8_t B3M::read(uint8_t id_, uint8_t option_, uint8_t address_, uint8_t length_){
 //     return 0;
 // }
-uint8_t B3M::write(uint8_t id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_, uint8_t length_){
-    uint8_t b3mFormat[7+bytes_], b3m_i;
-    b3mFormat[0] = 7+bytes_;
+uint8_t B3M::write(uint8_t id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_) {
+    uint8_t b3mFormat[0x07 + bytes_], b3m_i;
+    b3mFormat[0] = 0x07 + bytes_;
     b3mFormat[1] = B3M_WRITE;
     b3mFormat[2] = option_;
     b3mFormat[3] = id_;
-    for(b3m_i=4;b3m_i<4+bytes_;b3m_i++){
+    for (b3m_i = 4; b3m_i < 3 + bytes_; b3m_i++) {
         b3mFormat[b3m_i] = *data_;
         data_++;
     }
-    b3mFormat[b3m_i+1] = address_;
-    b3mFormat[b3m_i+2] = bytes_;
-    b3mFormat[b3m_i+3] = b3mCheckSum_(b3mFormat, b3m_i + 4);
-    b3mSend_(b3mFormat, b3m_i+5);
+    b3mFormat[b3m_i] = address_;
+    b3mFormat[b3m_i + 1] = bytes_;
+    b3mFormat[b3m_i + 2] = b3mCheckSum_(b3mFormat, b3m_i + 3);
+    b3mSend_(b3mFormat, 0x07 + bytes_);
     return 0;
 }
-// void B3M::write(uint8_t *id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_, uint8_t length_, uint8_t value_){
+// void B3M::write(uint8_t *id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_, uint8_t length_){
 
 // }
 
@@ -94,18 +95,18 @@ void B3M::reset(uint8_t id_, uint8_t option_, uint8_t time_) {
     b3mFormat[5] = b3mCheckSum_(b3mFormat, 0x05);
     b3mSend_(b3mFormat, 0x06);
 }
-void B3M::reset(uint8_t *id_, uint8_t option_, uint8_t time_, uint8_t value_) {
-    uint8_t b3mFormat[value_ + 5], b3m_i;
-    b3mFormat[0] = value_ + 5;
+void B3M::reset(uint8_t *id_, uint8_t option_, uint8_t time_, uint8_t length_) {
+    uint8_t b3mFormat[length_ + 5], b3m_i;
+    b3mFormat[0] = length_ + 5;
     b3mFormat[1] = B3M_RESET;
     b3mFormat[2] = option_;
-    for (b3m_i = 3; b3m_i < value_ + 3; b3m_i++) {
+    for (b3m_i = 3; b3m_i < length_ + 3; b3m_i++) {
         b3mFormat[b3m_i] = *id_;
         id_++;
     }
-    b3mFormat[b3m_i + 1] = time_;
-    b3mFormat[b3m_i + 2] = b3mCheckSum_(b3mFormat, b3m_i + 3);
-    b3mSend_(b3mFormat, b3m_i + 4);
+    b3mFormat[b3m_i] = time_;
+    b3mFormat[b3m_i + 1] = b3mCheckSum_(b3mFormat, b3m_i + 2);
+    b3mSend_(b3mFormat, b3m_i + 3);
 }
 
 uint8_t B3M::position(uint8_t id_, uint8_t option_, uint16_t position_, uint16_t time_) {
@@ -123,12 +124,12 @@ uint8_t B3M::position(uint8_t id_, uint8_t option_, uint16_t position_, uint16_t
     return 0;
 }
 
-void B3M::position(uint8_t *id_, uint8_t option_, uint16_t *position_, uint16_t time_, uint8_t value_) {
-    uint8_t b3mFormat[(value_ * 3) + 6], b3m_i;
-    b3mFormat[0] = (value_ * 3) + 6;
+void B3M::position(uint8_t *id_, uint8_t option_, uint16_t *position_, uint16_t time_, uint8_t length_) {
+    uint8_t b3mFormat[(length_ * 3) + 6], b3m_i;
+    b3mFormat[0] = (length_ * 3) + 6;
     b3mFormat[1] = B3M_POSITION;
     b3mFormat[2] = option_;
-    for (b3m_i = 3; b3m_i < value_ * 3 + 3; b3m_i += 3) {
+    for (b3m_i = 3; b3m_i < length_ * 3 + 3; b3m_i += 3) {
         b3mFormat[b3m_i] = *id_;
         b3mFormat[b3m_i + 1] = lowByte(*position_);
         b3mFormat[b3m_i + 2] = highByte(*position_);
@@ -148,7 +149,6 @@ uint32_t b3mBaudrate_, b3mTimeout_;
 
 uint8_t B3M::b3mCheckSum_(uint8_t *send_formats_, uint8_t bytes_) {
     uint8_t checkSum = 0, b3m_i = 0;
-
     for (b3m_i = 0; b3m_i < bytes_; b3m_i++) {
         checkSum += *send_formats_;
         send_formats_++;
@@ -157,6 +157,16 @@ uint8_t B3M::b3mCheckSum_(uint8_t *send_formats_, uint8_t bytes_) {
 }
 
 void B3M::b3mSend_(uint8_t *send_formats_, uint8_t bytes_) {
+    uint8_t b3m_i;
+    digitalWrite(b3mEnPin_, HIGH);
+    delay(1);
+    for (b3m_i = 0; b3m_i < bytes_; b3m_i++) {
+        b3mSerial_->write(*send_formats_);
+        send_formats_++;
+        delayMicroseconds(50);
+    }
+    delay(1);
+    digitalWrite(b3mEnPin_, LOW);
 }
 
 uint8_t B3M::b3mRead_(uint8_t bytes_) {
