@@ -64,10 +64,23 @@ void B3M::begin(void) {
 // uint8_t B3M::read(uint8_t id_, uint8_t option_, uint8_t address_, uint8_t length_){
 //     return 0;
 // }
-// uint8_t B3M::write(uint8_t id_, uint8_t option_, uint8_t *data, uint8_t address_, uint8_t length_){
-//     return 0;
-// }
-// void B3M::write(uint8_t *id_, uint8_t option_, uint8_t *data, uint8_t address_, uint8_t length_, uint8_t value_){
+uint8_t B3M::write(uint8_t id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_, uint8_t length_){
+    uint8_t b3mFormat[7+bytes_], b3m_i;
+    b3mFormat[0] = 7+bytes_;
+    b3mFormat[1] = B3M_WRITE;
+    b3mFormat[2] = option_;
+    b3mFormat[3] = id_;
+    for(b3m_i=4;b3m_i<4+bytes_;b3m_i++){
+        b3mFormat[b3m_i] = *data_;
+        data_++;
+    }
+    b3mFormat[b3m_i+1] = address_;
+    b3mFormat[b3m_i+2] = bytes_;
+    b3mFormat[b3m_i+3] = b3mCheckSum_(b3mFormat, b3m_i + 4);
+    b3mSend_(b3mFormat, b3m_i+5);
+    return 0;
+}
+// void B3M::write(uint8_t *id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_, uint8_t length_, uint8_t value_){
 
 // }
 
