@@ -70,7 +70,8 @@ void B3M::begin(void) {
 // void B3M::write(uint8_t *id_, uint8_t option_, uint8_t *data, uint8_t address_, uint8_t length_, uint8_t value_){
 
 // }
-void B3M::reset(uint8_t id_, uint8_t option_, uint8_t time_){
+
+void B3M::reset(uint8_t id_, uint8_t option_, uint8_t time_) {
     uint8_t b3mFormat[6];
     b3mFormat[0] = 0x06;
     b3mFormat[1] = B3M_RESET;
@@ -80,21 +81,21 @@ void B3M::reset(uint8_t id_, uint8_t option_, uint8_t time_){
     b3mFormat[5] = b3mCheckSum_(b3mFormat, 0x05);
     b3mSend_(b3mFormat, 0x06);
 }
-void B3M::reset(uint8_t *id_, uint8_t option_, uint8_t time_, uint8_t value_){
+void B3M::reset(uint8_t *id_, uint8_t option_, uint8_t time_, uint8_t value_) {
     uint8_t b3mFormat[value_ + 5], b3m_i;
-    b3mFormat[0] = 0x06;
+    b3mFormat[0] = value_ + 5;
     b3mFormat[1] = B3M_RESET;
     b3mFormat[2] = option_;
-    for(b3m_i=3;b3m_i<value_+3;b3m_i++){
+    for (b3m_i = 3; b3m_i < value_ + 3; b3m_i++) {
         b3mFormat[b3m_i] = *id_;
         id_++;
     }
-    b3mFormat[b3m_i+1] = time_;
-    b3mFormat[b3m_i+2] = b3mCheckSum_(b3mFormat, b3m_i+3);
-    b3mSend_(b3mFormat, b3m_i+4);
+    b3mFormat[b3m_i + 1] = time_;
+    b3mFormat[b3m_i + 2] = b3mCheckSum_(b3mFormat, b3m_i + 3);
+    b3mSend_(b3mFormat, b3m_i + 4);
 }
 
-uint8_t B3M::position(uint8_t id_, uint8_t option_, uint16_t position_, uint16_t time_){
+uint8_t B3M::position(uint8_t id_, uint8_t option_, uint16_t position_, uint16_t time_) {
     uint8_t b3mFormat[9];
     b3mFormat[0] = 0x09;
     b3mFormat[1] = B3M_POSITION;
@@ -108,9 +109,24 @@ uint8_t B3M::position(uint8_t id_, uint8_t option_, uint16_t position_, uint16_t
     b3mSend_(b3mFormat, 0x09);
     return 0;
 }
-// void B3M::position(uint8_t *id_, uint8_t option_, uint16_t *position_, uint16_t time_, uint8_t value_){
 
-// }
+void B3M::position(uint8_t *id_, uint8_t option_, uint16_t *position_, uint16_t time_, uint8_t value_) {
+    uint8_t b3mFormat[(value_ * 3) + 6], b3m_i;
+    b3mFormat[0] = (value_ * 3) + 6;
+    b3mFormat[1] = B3M_POSITION;
+    b3mFormat[2] = option_;
+    for (b3m_i = 3; b3m_i < value_ * 3 + 3; b3m_i += 3) {
+        b3mFormat[b3m_i] = *id_;
+        b3mFormat[b3m_i + 1] = lowByte(*position_);
+        b3mFormat[b3m_i + 2] = highByte(*position_);
+        id_++;
+        position_++;
+    }
+    b3mFormat[b3m_i + 1] = lowByte(time_);
+    b3mFormat[b3m_i + 2] = highByte(time_);
+    b3mFormat[b3m_i + 3] = b3mCheckSum_(b3mFormat, b3m_i + 4);
+    b3mSend_(b3mFormat, b3m_i + 5);
+}
 
 // protected members
 HardwareSerial *b3mSerial_;
