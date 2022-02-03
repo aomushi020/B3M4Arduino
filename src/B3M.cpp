@@ -170,11 +170,7 @@ void B3M::b3mSend_(uint8_t *send_formats_, uint8_t bytes_) {
     uint8_t b3m_i_;
     digitalWrite(b3mEnPin_, HIGH);
     delay(10);
-    // for (b3m_i_ = 0; b3m_i_ < bytes_; b3m_i_++) {
     b3mSerial_->write(send_formats_, bytes_);
-        // send_formats_++;
-        // delayMicroseconds(220);
-    // }
     delay(10);
     digitalWrite(b3mEnPin_, LOW);
 }
