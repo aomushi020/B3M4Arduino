@@ -123,6 +123,7 @@ uint8_t B3M::position(uint8_t id_, uint8_t option_, int16_t position_, uint16_t 
     b3mFormat_[1] = B3M_POSITION;
     b3mFormat_[2] = option_;
     b3mFormat_[3] = id_;
+    position_ = constrain(position_, B3M_MIN_POSITION, B3M_MAX_POSITION);
     b3mFormat_[4] = lowByte(position_);
     b3mFormat_[5] = highByte(position_);
     b3mFormat_[6] = lowByte(time_);
@@ -141,6 +142,7 @@ void B3M::position(uint8_t *id_, uint8_t option_, int16_t *position_, uint16_t t
     b3mFormat_[2] = option_;
     for (b3m_i_ = 3; b3m_i_ < (length_ * 3 + 3); b3m_i_ += 3) {
         b3mFormat_[b3m_i_] = *id_;
+        *position_ = constrain(*position_, B3M_MIN_POSITION, B3M_MAX_POSITION);
         b3mFormat_[b3m_i_ + 1] = lowByte(*position_);
         b3mFormat_[b3m_i_ + 2] = highByte(*position_);
         id_++;
