@@ -131,7 +131,9 @@ uint8_t B3M::position(uint8_t id_, uint8_t option_, uint16_t position_, uint16_t
     b3mSend_(b3mFormat, 0x09);
     return b3mFormat[8];
 }
-
+void B3M::position(uint8_t *id_, uint16_t *position_, uint8_t length_){
+    position(id_, 0x80, position_, 0x00, length_);
+}
 void B3M::position(uint8_t *id_, uint8_t option_, uint16_t *position_, uint16_t time_, uint8_t length_) {
     uint8_t b3mFormat[(length_ * 3) + 6], b3m_i;
     b3mFormat[0] = (length_ * 3) + 6;
