@@ -80,14 +80,14 @@ uint8_t B3M::write(uint8_t id_, uint8_t option_, uint8_t *data_, uint8_t bytes_,
     b3mFormat_[b3m_i_ + 1] = bytes_;
     b3mFormat_[b3m_i_ + 2] = b3mCheckSum_(b3mFormat_, 6 + bytes_);
     b3mSend_(b3mFormat_, 7 + bytes_);
-    return b3mFormat_[b3m_i_ + 2];
+    return b3mRead_(readBuffer);
 }
 // void B3M::write(uint8_t *id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_, uint8_t length_){
 
 // }
 
 void B3M::reset(void) {
-    reset(0xFF);
+    reset(B3M_BROADCAST_ADDR);
 }
 void B3M::reset(uint8_t id_) {
     reset(id_, B3M_GET_ERROR, 0x00);
@@ -135,7 +135,7 @@ uint8_t B3M::position(uint8_t id_, uint8_t option_, int16_t position_, uint16_t 
     b3mFormat_[7] = highByte(time_);
     b3mFormat_[8] = b3mCheckSum_(b3mFormat_, 0x08);
     b3mSend_(b3mFormat_, 0x09);
-    return b3mFormat_[8];
+    return b3mRead_(readBuffer);
 }
 void B3M::position(uint8_t *id_, int16_t *position_, uint8_t length_) {
     position(id_, B3M_GET_ERROR, position_, 0x00, length_);
@@ -194,6 +194,11 @@ void B3M::b3mSend_(uint8_t *send_formats_, uint8_t bytes_) {
     digitalWrite(b3mEnPin_, LOW);
 }
 
-uint8_t B3M::b3mRead_(uint8_t bytes_) {
-    return 0;
+uint8_t B3M::b3mRead_(uint8_t *returnBuffer_) {
+    uint8_t *b3m_length_ = returnBuffer_;
+    while(b3mSerial_->available()){
+        *returnBuffer_ = b3mSerial_->read();
+        returnBuffer_++;
+    }
+    return *b3m_length_;
 }
