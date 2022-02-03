@@ -157,10 +157,10 @@ class B3M{
         void reset(uint8_t id_);
         void reset(uint8_t id_, uint8_t option_, uint8_t time_);
         void reset(uint8_t *id_, uint8_t option_, uint8_t time_, uint8_t length_);
-        uint8_t position(uint8_t id_, uint16_t position_);
-        uint8_t position(uint8_t id_, uint8_t option_, uint16_t position_, uint16_t time_);
-        void position(uint8_t *id_, uint16_t *position_, uint8_t length_);
-        void position(uint8_t *id_, uint8_t option_, uint16_t *position_, uint16_t time_, uint8_t length_);
+        uint8_t position(uint8_t id_, int16_t position_);
+        uint8_t position(uint8_t id_, uint8_t option_, int16_t position_, uint16_t time_);
+        void position(uint8_t *id_, int16_t *position_, uint8_t length_);
+        void position(uint8_t *id_, uint8_t option_, int16_t *position_, uint16_t time_, uint8_t length_);
 
     protected:
         HardwareSerial *b3mSerial_;
