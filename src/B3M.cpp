@@ -99,9 +99,18 @@ void B3M::save(uint8_t *id_, uint8_t option_, uint8_t length_){
     b3mSend_(b3mFormat_, 4 + length_);
 }
 
-// uint8_t B3M::read(uint8_t id_, uint8_t option_, uint8_t address_, uint8_t length_){
-//     return 0;
-// }
+uint8_t B3M::read(uint8_t id_, uint8_t option_, uint8_t address_, uint8_t length_){
+    uint8_t b3mFormat_[7];
+    b3mFormat_[0] = 0x07;
+    b3mFormat_[1] = B3M_READ;
+    b3mFormat_[2] = option_;
+    b3mFormat_[3] = id_;
+    b3mFormat_[4] = address_;
+    b3mFormat_[5] = length_;
+    b3mFormat_[6] = b3mCheckSum_(b3mFormat_, 4);
+    b3mSend_(b3mFormat_, 7);
+    return b3mRead_(readBuffer);
+}
 
 uint8_t B3M::write(uint8_t id_, uint8_t *data_, uint8_t bytes_, uint8_t address_) {
     return write(id_, B3M_GET_ERROR, data_, bytes_, address_);
