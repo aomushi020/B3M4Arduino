@@ -63,6 +63,9 @@ void B3M::begin(void) {
 //     return 0;
 // }
 
+uint8_t B3M::write(uint8_t id_, uint8_t *data_, uint8_t bytes_, uint8_t address_) {
+    return write(id_, B3M_GET_ERROR, data_, bytes_, address_);
+}
 uint8_t B3M::write(uint8_t id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_) {
     uint8_t b3mFormat_[7 + bytes_], b3m_i_;
     b3mFormat_[0] = 7 + bytes_;
@@ -87,7 +90,7 @@ void B3M::reset(void) {
     reset(0xFF);
 }
 void B3M::reset(uint8_t id_) {
-    reset(id_, 0x80, 0x00);
+    reset(id_, B3M_GET_ERROR, 0x00);
 }
 void B3M::reset(uint8_t id_, uint8_t option_, uint8_t time_) {
     uint8_t b3mFormat_[6];
@@ -98,6 +101,9 @@ void B3M::reset(uint8_t id_, uint8_t option_, uint8_t time_) {
     b3mFormat_[4] = time_;
     b3mFormat_[5] = b3mCheckSum_(b3mFormat_, 0x05);
     b3mSend_(b3mFormat_, 0x06);
+}
+void B3M::reset(uint8_t *id_, uint8_t length_){
+    reset(id_, B3M_GET_ERROR, 0x00, length_);
 }
 void B3M::reset(uint8_t *id_, uint8_t option_, uint8_t time_, uint8_t length_) {
     uint8_t b3mFormat_[length_ + 5], b3m_i_;
@@ -114,9 +120,8 @@ void B3M::reset(uint8_t *id_, uint8_t option_, uint8_t time_, uint8_t length_) {
 }
 
 uint8_t B3M::position(uint8_t id_, int16_t position_) {
-    return position(id_, 0x80, position_, 0x00);
+    return position(id_, B3M_GET_ERROR, position_, 0x00);
 }
-
 uint8_t B3M::position(uint8_t id_, uint8_t option_, int16_t position_, uint16_t time_) {
     uint8_t b3mFormat_[9];
     b3mFormat_[0] = 0x09;
@@ -133,7 +138,7 @@ uint8_t B3M::position(uint8_t id_, uint8_t option_, int16_t position_, uint16_t 
     return b3mFormat_[8];
 }
 void B3M::position(uint8_t *id_, int16_t *position_, uint8_t length_) {
-    position(id_, 0x80, position_, 0x00, length_);
+    position(id_, B3M_GET_ERROR, position_, 0x00, length_);
 }
 void B3M::position(uint8_t *id_, uint8_t option_, int16_t *position_, uint16_t time_, uint8_t length_) {
     uint8_t b3mFormat_[(length_ * 3) + 6], b3m_i_;
@@ -152,6 +157,18 @@ void B3M::position(uint8_t *id_, uint8_t option_, int16_t *position_, uint16_t t
     b3mFormat_[b3m_i_ + 2] = highByte(time_);
     b3mFormat_[b3m_i_ + 3] = b3mCheckSum_(b3mFormat_, b3m_i_ + 4);
     b3mSend_(b3mFormat_, b3m_i_ + 5);
+}
+
+int16_t B3M::deg2Pos(float deg_){
+    return constrain(int(deg_*100), B3M_MIN_POSITION, B3M_MAX_POSITION);
+}
+uint8_t B3M::deg2Pos(float *deg_, uint8_t length_){
+    uint8_t b3m_i_;
+    for(b3m_i_=0;b3m_i_<length_;b3m_i_++){
+        *deg_ = deg2Pos(*deg_);
+        deg_++;
+    }
+    return length_;
 }
 
 // protected members

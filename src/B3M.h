@@ -153,17 +153,22 @@ class B3M{
         // uint8_t save(uint8_t id_, uint8_t option_);
         // void save(uint8_t *id_, uint8_t option_, uint8_t length_);
         // uint8_t read(uint8_t id_, uint8_t option_, uint8_t address_, uint8_t bytes_);
+        uint8_t write(uint8_t id_, uint8_t *data_, uint8_t bytes_, uint8_t address_);
         uint8_t write(uint8_t id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_);
         // void write(uint8_t *id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_, uint8_t length_);
         void reset(void);
         void reset(uint8_t id_);
         void reset(uint8_t id_, uint8_t option_, uint8_t time_);
+        void reset(uint8_t *id_, uint8_t length_);
         void reset(uint8_t *id_, uint8_t option_, uint8_t time_, uint8_t length_);
         uint8_t position(uint8_t id_, int16_t position_);
         uint8_t position(uint8_t id_, uint8_t option_, int16_t position_, uint16_t time_);
         void position(uint8_t *id_, int16_t *position_, uint8_t length_);
         void position(uint8_t *id_, uint8_t option_, int16_t *position_, uint16_t time_, uint8_t length_);
 
+        // Advance Commands
+        int16_t deg2Pos(float deg_);
+        uint8_t deg2Pos(float *deg, uint8_t length_);
     protected:
         HardwareSerial *b3mSerial_;
         uint8_t b3mEnPin_, b3mTxPin_, b3mRxPin_;
