@@ -10,8 +10,8 @@
 
 // B3M Default Baudrate
 #define B3M_DEFAULT_BAUDRATE 115200
-#define B3M_MIN_POSITION -35000
-#define B3M_MAX_POSITION 35000
+#define B3M_MIN_POSITION    -35000
+#define B3M_MAX_POSITION    35000
 
 // B3M Commands
 #define B3M_LOAD        0x01
