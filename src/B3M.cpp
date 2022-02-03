@@ -64,20 +64,20 @@ void B3M::begin(void) {
 // }
 
 uint8_t B3M::write(uint8_t id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_) {
-    uint8_t b3mFormat[7 + bytes_], b3m_i;
-    b3mFormat[0] = 7 + bytes_;
-    b3mFormat[1] = B3M_WRITE;
-    b3mFormat[2] = option_;
-    b3mFormat[3] = id_;
-    for (b3m_i = 4; b3m_i < (4 + bytes_); b3m_i++) {
-        b3mFormat[b3m_i] = *data_;
+    uint8_t b3mFormat_[7 + bytes_], b3m_i_;
+    b3mFormat_[0] = 7 + bytes_;
+    b3mFormat_[1] = B3M_WRITE;
+    b3mFormat_[2] = option_;
+    b3mFormat_[3] = id_;
+    for (b3m_i_ = 4; b3m_i_ < (4 + bytes_); b3m_i_++) {
+        b3mFormat_[b3m_i_] = *data_;
         data_++;
     }
-    b3mFormat[b3m_i] = address_;
-    b3mFormat[b3m_i + 1] = bytes_;
-    b3mFormat[b3m_i + 2] = b3mCheckSum_(b3mFormat, 6 + bytes_);
-    b3mSend_(b3mFormat, 7 + bytes_);
-    return b3mFormat[b3m_i + 2];
+    b3mFormat_[b3m_i_] = address_;
+    b3mFormat_[b3m_i_ + 1] = bytes_;
+    b3mFormat_[b3m_i_ + 2] = b3mCheckSum_(b3mFormat_, 6 + bytes_);
+    b3mSend_(b3mFormat_, 7 + bytes_);
+    return b3mFormat_[b3m_i_ + 2];
 }
 // void B3M::write(uint8_t *id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_, uint8_t length_){
 
@@ -90,27 +90,27 @@ void B3M::reset(uint8_t id_){
     reset(id_, 0x80, 0x00);
 }
 void B3M::reset(uint8_t id_, uint8_t option_, uint8_t time_) {
-    uint8_t b3mFormat[6];
-    b3mFormat[0] = 0x06;
-    b3mFormat[1] = B3M_RESET;
-    b3mFormat[2] = option_;
-    b3mFormat[3] = id_;
-    b3mFormat[4] = time_;
-    b3mFormat[5] = b3mCheckSum_(b3mFormat, 0x05);
-    b3mSend_(b3mFormat, 0x06);
+    uint8_t b3mFormat_[6];
+    b3mFormat_[0] = 0x06;
+    b3mFormat_[1] = B3M_RESET;
+    b3mFormat_[2] = option_;
+    b3mFormat_[3] = id_;
+    b3mFormat_[4] = time_;
+    b3mFormat_[5] = b3mCheckSum_(b3mFormat_, 0x05);
+    b3mSend_(b3mFormat_, 0x06);
 }
 void B3M::reset(uint8_t *id_, uint8_t option_, uint8_t time_, uint8_t length_) {
-    uint8_t b3mFormat[length_ + 5], b3m_i;
-    b3mFormat[0] = length_ + 5;
-    b3mFormat[1] = B3M_RESET;
-    b3mFormat[2] = option_;
-    for (b3m_i = 3; b3m_i < (length_ + 3); b3m_i++) {
-        b3mFormat[b3m_i] = *id_;
+    uint8_t b3mFormat_[length_ + 5], b3m_i_;
+    b3mFormat_[0] = length_ + 5;
+    b3mFormat_[1] = B3M_RESET;
+    b3mFormat_[2] = option_;
+    for (b3m_i_ = 3; b3m_i_ < (length_ + 3); b3m_i_++) {
+        b3mFormat_[b3m_i_] = *id_;
         id_++;
     }
-    b3mFormat[b3m_i] = time_;
-    b3mFormat[b3m_i + 1] = b3mCheckSum_(b3mFormat, b3m_i + 2);
-    b3mSend_(b3mFormat, b3m_i + 3);
+    b3mFormat_[b3m_i_] = time_;
+    b3mFormat_[b3m_i_ + 1] = b3mCheckSum_(b3mFormat_, b3m_i_ + 2);
+    b3mSend_(b3mFormat_, b3m_i_ + 3);
 }
 
 uint8_t B3M::position(uint8_t id_, uint16_t position_){
@@ -118,38 +118,38 @@ uint8_t B3M::position(uint8_t id_, uint16_t position_){
 }
 
 uint8_t B3M::position(uint8_t id_, uint8_t option_, uint16_t position_, uint16_t time_) {
-    uint8_t b3mFormat[9];
-    b3mFormat[0] = 0x09;
-    b3mFormat[1] = B3M_POSITION;
-    b3mFormat[2] = option_;
-    b3mFormat[3] = id_;
-    b3mFormat[4] = lowByte(position_);
-    b3mFormat[5] = highByte(position_);
-    b3mFormat[6] = lowByte(time_);
-    b3mFormat[7] = highByte(time_);
-    b3mFormat[8] = b3mCheckSum_(b3mFormat, 0x08);
-    b3mSend_(b3mFormat, 0x09);
-    return b3mFormat[8];
+    uint8_t b3mFormat_[9];
+    b3mFormat_[0] = 0x09;
+    b3mFormat_[1] = B3M_POSITION;
+    b3mFormat_[2] = option_;
+    b3mFormat_[3] = id_;
+    b3mFormat_[4] = lowByte(position_);
+    b3mFormat_[5] = highByte(position_);
+    b3mFormat_[6] = lowByte(time_);
+    b3mFormat_[7] = highByte(time_);
+    b3mFormat_[8] = b3mCheckSum_(b3mFormat_, 0x08);
+    b3mSend_(b3mFormat_, 0x09);
+    return b3mFormat_[8];
 }
 void B3M::position(uint8_t *id_, uint16_t *position_, uint8_t length_){
     position(id_, 0x80, position_, 0x00, length_);
 }
 void B3M::position(uint8_t *id_, uint8_t option_, uint16_t *position_, uint16_t time_, uint8_t length_) {
-    uint8_t b3mFormat[(length_ * 3) + 6], b3m_i;
-    b3mFormat[0] = (length_ * 3) + 6;
-    b3mFormat[1] = B3M_POSITION;
-    b3mFormat[2] = option_;
-    for (b3m_i = 3; b3m_i < (length_ * 3 + 3); b3m_i += 3) {
-        b3mFormat[b3m_i] = *id_;
-        b3mFormat[b3m_i + 1] = lowByte(*position_);
-        b3mFormat[b3m_i + 2] = highByte(*position_);
+    uint8_t b3mFormat_[(length_ * 3) + 6], b3m_i_;
+    b3mFormat_[0] = (length_ * 3) + 6;
+    b3mFormat_[1] = B3M_POSITION;
+    b3mFormat_[2] = option_;
+    for (b3m_i_ = 3; b3m_i_ < (length_ * 3 + 3); b3m_i_ += 3) {
+        b3mFormat_[b3m_i_] = *id_;
+        b3mFormat_[b3m_i_ + 1] = lowByte(*position_);
+        b3mFormat_[b3m_i_ + 2] = highByte(*position_);
         id_++;
         position_++;
     }
-    b3mFormat[b3m_i + 1] = lowByte(time_);
-    b3mFormat[b3m_i + 2] = highByte(time_);
-    b3mFormat[b3m_i + 3] = b3mCheckSum_(b3mFormat, b3m_i + 4);
-    b3mSend_(b3mFormat, b3m_i + 5);
+    b3mFormat_[b3m_i_ + 1] = lowByte(time_);
+    b3mFormat_[b3m_i_ + 2] = highByte(time_);
+    b3mFormat_[b3m_i_ + 3] = b3mCheckSum_(b3mFormat_, b3m_i_ + 4);
+    b3mSend_(b3mFormat_, b3m_i_ + 5);
 }
 
 // protected members
@@ -158,19 +158,19 @@ uint8_t b3mEnPin_, b3mTxPin_, b3mRxPin_;
 uint32_t b3mBaudrate_, b3mTimeout_;
 
 uint8_t B3M::b3mCheckSum_(uint8_t *send_formats_, uint8_t bytes_) {
-    uint8_t checkSum = 0x00, b3m_i = 0;
-    for (b3m_i = 0; b3m_i < bytes_; b3m_i++) {
-        checkSum += *send_formats_;
+    uint8_t checkSum_ = 0x00, b3m_i_ = 0;
+    for (b3m_i_ = 0; b3m_i_ < bytes_; b3m_i_++) {
+        checkSum_ += *send_formats_;
         send_formats_++;
     }
-    return checkSum;
+    return checkSum_;
 }
 
 void B3M::b3mSend_(uint8_t *send_formats_, uint8_t bytes_) {
-    uint8_t b3m_i;
+    uint8_t b3m_i_;
     digitalWrite(b3mEnPin_, HIGH);
     delay(10);
-    // for (b3m_i = 0; b3m_i < bytes_; b3m_i++) {
+    // for (b3m_i_ = 0; b3m_i_ < bytes_; b3m_i_++) {
     b3mSerial_->write(send_formats_, bytes_);
         // send_formats_++;
         // delayMicroseconds(220);
