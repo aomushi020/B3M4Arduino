@@ -121,7 +121,7 @@ uint8_t B3M::write(uint8_t id_, uint8_t option_, uint8_t *data_, uint8_t bytes_,
     b3mFormat_[1] = B3M_WRITE;
     b3mFormat_[2] = option_;
     b3mFormat_[3] = id_;
-    for (b3m_i_ = 4; b3m_i_ < (4 + bytes_); b3m_i_ += bytes_) {
+    for (b3m_i_ = 4; b3m_i_ < (4 + bytes_); b3m_i_++) {
         b3mFormat_[b3m_i_] = *data_;
         data_++;
     }
@@ -223,6 +223,7 @@ uint8_t B3M::deg2Pos(float *deg_, uint8_t length_) {
 float B3M::pos2Deg(int16_t position_) {
     return (position_ / 100.0);
 }
+
 
 // protected members
 HardwareSerial *b3mSerial_;
