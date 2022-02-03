@@ -4,6 +4,7 @@
     https://github.com/aomushi020/B3M4Arduino
     This library is released under the MIT license.
 */
+
 #include "Arduino.h"
 #include "B3M.h"
 
@@ -46,10 +47,19 @@ void B3M::begin(void) {
     digitalWrite(b3mEnPin_, LOW);
 }
 
-// uint8_t B3M::load(uint8_t id_, uint8_t option_){
-//     return 0;
-// }
-
+uint8_t B3M::load(uint8_t id_){
+    return load(id_, B3M_GET_ERROR);
+}
+uint8_t B3M::load(uint8_t id_, uint8_t option_){
+    uint8_t b3mFormat_[5];
+    b3mFormat_[0] = 0x05;
+    b3mFormat_[1] = B3M_LOAD;
+    b3mFormat_[2] = option_;
+    b3mFormat_[3] = id_;
+    b3mFormat_[4] = b3mCheckSum_(b3mFormat_, 4);
+    b3mSend_(b3mFormat_, 5);
+    return b3mRead_(readBuffer);
+}
 // void B3M::load(uint8_t *id_, uint8_t option_, uint8_t length_){
 
 // }
@@ -169,6 +179,10 @@ uint8_t B3M::deg2Pos(float *deg_, uint8_t length_){
         deg_++;
     }
     return length_;
+}
+
+float B3M::pos2Deg(int16_t position_){
+    return (position_/100.0);
 }
 
 // protected members

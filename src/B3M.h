@@ -149,7 +149,8 @@ class B3M{
         B3M(HardwareSerial *serialPointer_, uint8_t enPin_, uint8_t rxPin_, uint8_t txPin_, uint32_t baudrate_, uint32_t timeout_);
         void begin(void);
         // Basic Commands
-        // uint8_t load(uint8_t id_, uint8_t option_);
+        uint8_t load(uint8_t id_);
+        uint8_t load(uint8_t id_, uint8_t option_);
         // void load(uint8_t *id_, uint8_t option_, uint8_t length_);
         // uint8_t save(uint8_t id_, uint8_t option_);
         // void save(uint8_t *id_, uint8_t option_, uint8_t length_);
@@ -170,6 +171,7 @@ class B3M{
         // Advance Commands
         int16_t deg2Pos(float deg_);
         uint8_t deg2Pos(float *deg, uint8_t length_);
+        float pos2Deg(int16_t position_);
     protected:
         HardwareSerial *b3mSerial_;
         uint8_t b3mEnPin_, b3mTxPin_, b3mRxPin_;

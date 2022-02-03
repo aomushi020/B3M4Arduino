@@ -15,6 +15,7 @@ write   KEYWORD2
 reset   KEYWORD2
 position    KEYWORD2
 deg2Pos KEYWORD2
+pos2Deg KEYWORD2
 
 # Instances (KEYWORD2)
 
