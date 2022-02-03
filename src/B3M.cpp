@@ -87,6 +87,14 @@ uint8_t B3M::write(uint8_t id_, uint8_t option_, uint8_t *data_, uint8_t bytes_,
 
 // }
 
+void B3M::reset(void){
+    reset(0xFF);
+}
+
+void B3M::reset(uint8_t id_){
+    reset(id_, 0x80, 0x00);
+}
+
 void B3M::reset(uint8_t id_, uint8_t option_, uint8_t time_) {
     uint8_t b3mFormat[6];
     b3mFormat[0] = 0x06;
@@ -110,6 +118,10 @@ void B3M::reset(uint8_t *id_, uint8_t option_, uint8_t time_, uint8_t length_) {
     b3mFormat[b3m_i] = time_;
     b3mFormat[b3m_i + 1] = b3mCheckSum_(b3mFormat, b3m_i + 2);
     b3mSend_(b3mFormat, b3m_i + 3);
+}
+
+uint8_t B3M::position(uint8_t id_, uint16_t position_){
+    return position(id_, 0x80, position_, 0x00);
 }
 
 uint8_t B3M::position(uint8_t id_, uint8_t option_, uint16_t position_, uint16_t time_) {
@@ -163,11 +175,11 @@ void B3M::b3mSend_(uint8_t *send_formats_, uint8_t bytes_) {
     uint8_t b3m_i;
     digitalWrite(b3mEnPin_, HIGH);
     delay(10);
-    for (b3m_i = 0; b3m_i < bytes_; b3m_i++) {
-        b3mSerial_->write(*send_formats_);
-        send_formats_++;
-        delayMicroseconds(220);
-    }
+    // for (b3m_i = 0; b3m_i < bytes_; b3m_i++) {
+    b3mSerial_->write(send_formats_, bytes_);
+        // send_formats_++;
+        // delayMicroseconds(220);
+    // }
     delay(10);
     digitalWrite(b3mEnPin_, LOW);
 }
