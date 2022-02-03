@@ -7,7 +7,6 @@
 #include "Arduino.h"
 #include "B3M.h"
 
-// public members
 B3M::B3M(HardwareSerial *serialPointer_, uint8_t enPin_) {
     b3mSerial_ = serialPointer_;
     b3mEnPin_ = enPin_;
@@ -16,7 +15,6 @@ B3M::B3M(HardwareSerial *serialPointer_, uint8_t enPin_) {
     b3mBaudrate_ = 0;
     b3mTimeout_ = 0;
 }
-
 B3M::B3M(HardwareSerial *serialPointer_, uint8_t enPin_, uint32_t baudrate_, uint32_t timeout_) {
     b3mSerial_ = serialPointer_;
     b3mEnPin_ = enPin_;
@@ -25,7 +23,6 @@ B3M::B3M(HardwareSerial *serialPointer_, uint8_t enPin_, uint32_t baudrate_, uin
     b3mBaudrate_ = baudrate_;
     b3mTimeout_ = timeout_;
 }
-
 B3M::B3M(HardwareSerial *serialPointer_, uint8_t enPin_, uint8_t rxPin_, uint8_t txPin_, uint32_t baudrate_, uint32_t timeout_) {
     b3mSerial_ = serialPointer_;
     b3mEnPin_ = enPin_;
@@ -82,7 +79,6 @@ uint8_t B3M::write(uint8_t id_, uint8_t option_, uint8_t *data_, uint8_t bytes_,
     b3mSend_(b3mFormat, 7 + bytes_);
     return b3mFormat[b3m_i + 2];
 }
-
 // void B3M::write(uint8_t *id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_, uint8_t length_){
 
 // }
@@ -90,11 +86,9 @@ uint8_t B3M::write(uint8_t id_, uint8_t option_, uint8_t *data_, uint8_t bytes_,
 void B3M::reset(void){
     reset(0xFF);
 }
-
 void B3M::reset(uint8_t id_){
     reset(id_, 0x80, 0x00);
 }
-
 void B3M::reset(uint8_t id_, uint8_t option_, uint8_t time_) {
     uint8_t b3mFormat[6];
     b3mFormat[0] = 0x06;
@@ -105,7 +99,6 @@ void B3M::reset(uint8_t id_, uint8_t option_, uint8_t time_) {
     b3mFormat[5] = b3mCheckSum_(b3mFormat, 0x05);
     b3mSend_(b3mFormat, 0x06);
 }
-
 void B3M::reset(uint8_t *id_, uint8_t option_, uint8_t time_, uint8_t length_) {
     uint8_t b3mFormat[length_ + 5], b3m_i;
     b3mFormat[0] = length_ + 5;
