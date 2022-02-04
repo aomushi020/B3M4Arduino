@@ -158,7 +158,7 @@ class B3M{
         uint8_t read(uint8_t id_, uint8_t option_, uint8_t address_, uint8_t bytes_);
         uint8_t write(uint8_t id_, uint8_t *data_, uint8_t bytes_, uint8_t address_);
         uint8_t write(uint8_t id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_);
-        // void write(uint8_t *id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_, uint8_t length_);
+        void write(uint8_t *id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_, uint8_t length_);
         void reset(void);
         void reset(uint8_t id_);
         void reset(uint8_t id_, uint8_t option_, uint8_t time_);

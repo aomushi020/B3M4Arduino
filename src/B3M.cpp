@@ -73,10 +73,10 @@ void B3M::load(uint8_t *id_, uint8_t option_, uint8_t length_) {
     b3mSend_(b3mFormat_, 4 + length_);
 }
 
-uint8_t B3M::save(uint8_t id_){
+uint8_t B3M::save(uint8_t id_) {
     return save(id_, B3M_GET_ERROR);
 }
-uint8_t B3M::save(uint8_t id_, uint8_t option_){
+uint8_t B3M::save(uint8_t id_, uint8_t option_) {
     uint8_t b3mFormat_[5];
     b3mFormat_[0] = 0x05;
     b3mFormat_[1] = B3M_SAVE;
@@ -86,7 +86,7 @@ uint8_t B3M::save(uint8_t id_, uint8_t option_){
     b3mSend_(b3mFormat_, 5);
     return b3mRead_(readBuffer);
 }
-void B3M::save(uint8_t *id_, uint8_t option_, uint8_t length_){
+void B3M::save(uint8_t *id_, uint8_t option_, uint8_t length_) {
     uint8_t b3mFormat_[4 + length_], b3m_i_;
     b3mFormat_[0] = 0x05;
     b3mFormat_[1] = B3M_SAVE;
@@ -99,7 +99,7 @@ void B3M::save(uint8_t *id_, uint8_t option_, uint8_t length_){
     b3mSend_(b3mFormat_, 4 + length_);
 }
 
-uint8_t B3M::read(uint8_t id_, uint8_t option_, uint8_t address_, uint8_t length_){
+uint8_t B3M::read(uint8_t id_, uint8_t option_, uint8_t address_, uint8_t length_) {
     uint8_t b3mFormat_[7];
     b3mFormat_[0] = 0x07;
     b3mFormat_[1] = B3M_READ;
@@ -131,9 +131,24 @@ uint8_t B3M::write(uint8_t id_, uint8_t option_, uint8_t *data_, uint8_t bytes_,
     b3mSend_(b3mFormat_, 7 + bytes_);
     return b3mRead_(readBuffer);
 }
-// void B3M::write(uint8_t *id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_, uint8_t length_){
-
-// }
+void B3M::write(uint8_t *id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_, uint8_t length_) {
+    uint8_t b3mFormat_[6 + ((bytes_ + 1) * length_)], b3m_i_, b3m_j_;
+    b3mFormat_[0] = 6 + ((bytes_ + 1) * length_);
+    b3mFormat_[1] = B3M_WRITE;
+    b3mFormat_[2] = option_;
+    for (b3m_i_ = 3; b3m_i_ < (3 + (bytes_ + 1) * length_); b3m_i_+=(bytes_ + 1)) {
+        b3mFormat_[b3m_i_] = *id_;
+        for (b3m_j_ = b3m_i_ + 1; b3m_j_ <= (b3m_i_ + bytes_); b3m_j_++) {
+            b3mFormat_[b3m_j_] = *data_;
+            data_++;
+        }
+        id_++;
+    }
+    b3mFormat_[b3m_i_] = address_;
+    b3mFormat_[b3m_i_ + 1] = bytes_;
+    b3mFormat_[b3m_i_ + 2] = b3mCheckSum_(b3mFormat_, 6 + bytes_);
+    b3mSend_(b3mFormat_, 7 + bytes_);
+}
 
 void B3M::reset(void) {
     reset(B3M_BROADCAST_ADDR);
@@ -223,7 +238,6 @@ uint8_t B3M::deg2Pos(float *deg_, uint8_t length_) {
 float B3M::pos2Deg(int16_t position_) {
     return (position_ / 100.0);
 }
-
 
 // protected members
 HardwareSerial *b3mSerial_;
