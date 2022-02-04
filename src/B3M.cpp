@@ -217,10 +217,10 @@ void B3M::position(uint8_t *id_, uint8_t option_, int16_t *position_, uint16_t t
         id_++;
         position_++;
     }
-    b3mFormat_[b3m_i_ + 1] = lowByte(time_);
-    b3mFormat_[b3m_i_ + 2] = highByte(time_);
-    b3mFormat_[b3m_i_ + 3] = b3mCheckSum_(b3mFormat_, b3m_i_ + 4);
-    b3mSend_(b3mFormat_, b3m_i_ + 5);
+    b3mFormat_[b3m_i_] = lowByte(time_);
+    b3mFormat_[b3m_i_ + 1] = highByte(time_);
+    b3mFormat_[b3m_i_ + 2] = b3mCheckSum_(b3mFormat_, b3m_i_ + 2);
+    b3mSend_(b3mFormat_, (length_ * 3) + 6);
 }
 
 int16_t B3M::deg2Pos(float deg_) {
@@ -246,12 +246,12 @@ uint8_t b3mEnPin_, b3mTxPin_, b3mRxPin_;
 uint32_t b3mBaudrate_, b3mTimeout_;
 
 uint8_t B3M::b3mCheckSum_(uint8_t *send_formats_, uint8_t bytes_) {
-    uint8_t checkSum_ = 0x00, b3m_i_ = 0;
+    uint8_t b3m_checkSum_ = 0x00, b3m_i_ = 0;
     for (b3m_i_ = 0; b3m_i_ < bytes_; b3m_i_++) {
-        checkSum_ += *send_formats_;
+        b3m_checkSum_ += *send_formats_;
         send_formats_++;
     }
-    return checkSum_;
+    return b3m_checkSum_;
 }
 
 void B3M::b3mSend_(uint8_t *send_formats_, uint8_t bytes_) {
@@ -259,6 +259,7 @@ void B3M::b3mSend_(uint8_t *send_formats_, uint8_t bytes_) {
     digitalWrite(b3mEnPin_, HIGH);
     delay(10);
     b3mSerial_->write(send_formats_, bytes_);
+    b3mSerial_->flush();
     delay(10);
     digitalWrite(b3mEnPin_, LOW);
 }
