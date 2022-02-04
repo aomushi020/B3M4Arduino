@@ -226,14 +226,15 @@ void B3M::position(uint8_t *id_, uint8_t option_, int16_t *position_, uint16_t t
 int16_t B3M::deg2Pos(float deg_) {
     return constrain(int(deg_ * 100), B3M_MIN_POSITION, B3M_MAX_POSITION);
 }
-// uint8_t B3M::deg2Pos(float *deg_, uint8_t length_) {
-//     uint8_t b3m_i_;
-//     for (b3m_i_ = 0; b3m_i_ < length_; b3m_i_++) {
-//         *deg_ = deg2Pos(*deg_);
-//         deg_++;
-//     }
-//     return length_;
-// }
+uint8_t B3M::deg2Pos(float *deg_, int16_t *pos_, uint8_t length_) {
+    uint8_t b3m_i_;
+    for (b3m_i_ = 0; b3m_i_ < length_; b3m_i_++) {
+        *pos_ = deg2Pos(*deg_);
+        pos_++;
+        deg_++;
+    }
+    return length_;
+}
 
 float B3M::pos2Deg(int16_t position_) {
     return (position_ / 100.0);
