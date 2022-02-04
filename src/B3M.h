@@ -170,7 +170,7 @@ class B3M{
         void position(uint8_t *id_, uint8_t option_, int16_t *position_, uint16_t time_, uint8_t length_);
         // Advance Commands
         int16_t deg2Pos(float deg_);
-        uint8_t deg2Pos(float *deg, uint8_t length_);
+        // uint8_t deg2Pos(float *deg, uint8_t length_);
         float pos2Deg(int16_t position_);
     protected:
         HardwareSerial *b3mSerial_;
