@@ -9,10 +9,10 @@
 #define B3M_h
 
 // B3M Default Value
-#define B3M_DEFAULT_BAUDRATE 115200
-#define B3M_MIN_POSITION    -35000
-#define B3M_MAX_POSITION    35000
-#define B3M_BROADCAST_ADDR  0xFF
+#define B3M_DEFAULT_BAUDRATE    115200
+#define B3M_MIN_POSITION        -35000
+#define B3M_MAX_POSITION        35000
+#define B3M_BROADCAST_ADDR      0xFF
 
 // B3M Commands
 #define B3M_LOAD        0x01
