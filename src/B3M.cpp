@@ -186,6 +186,9 @@ void B3M::reset(uint8_t *id_, uint8_t option_, uint8_t time_, size_t length_) {
 uint8_t B3M::position(uint8_t id_, int16_t position_) {
     return position(id_, B3M_GET_ERROR, position_, 0x00);
 }
+uint8_t B3M::position(uint8_t id_, int16_t position_, uint16_t time_){
+    return position(id_, B3M_GET_ERROR, position_, time_);
+}
 uint8_t B3M::position(uint8_t id_, uint8_t option_, int16_t position_, uint16_t time_) {
     uint8_t b3mFormat_[9];
     b3mFormat_[0] = 0x09;
@@ -203,6 +206,9 @@ uint8_t B3M::position(uint8_t id_, uint8_t option_, int16_t position_, uint16_t 
 }
 void B3M::position(uint8_t *id_, int16_t *position_, size_t length_) {
     position(id_, B3M_GET_ERROR, position_, 0x00, length_);
+}
+void B3M::position(uint8_t *id_, int16_t *position_, uint16_t time_, size_t length_) {
+    position(id_, B3M_GET_ERROR, position_, time_, length_);
 }
 void B3M::position(uint8_t *id_, uint8_t option_, int16_t *position_, uint16_t time_, size_t length_) {
     uint8_t b3mFormat_[(length_ * 3) + 6], b3m_i_;
