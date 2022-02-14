@@ -151,26 +151,26 @@ class B3M{
         // Basic Commands
         uint8_t load(uint8_t id_);
         uint8_t load(uint8_t id_, uint8_t option_);
-        void load(uint8_t *id_, uint8_t option_, uint8_t length_);
+        void load(uint8_t *id_, uint8_t option_, size_t length_);
         uint8_t save(uint8_t id_);
         uint8_t save(uint8_t id_, uint8_t option_);
-        void save(uint8_t *id_, uint8_t option_, uint8_t length_);
+        void save(uint8_t *id_, uint8_t option_, size_t length_);
         uint8_t read(uint8_t id_, uint8_t option_, uint8_t address_, uint8_t bytes_);
         uint8_t write(uint8_t id_, uint8_t *data_, uint8_t bytes_, uint8_t address_);
         uint8_t write(uint8_t id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_);
-        void write(uint8_t *id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_, uint8_t length_);
+        void write(uint8_t *id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_, size_t length_);
         void reset(void);
         void reset(uint8_t id_);
         void reset(uint8_t id_, uint8_t option_, uint8_t time_);
-        void reset(uint8_t *id_, uint8_t length_);
-        void reset(uint8_t *id_, uint8_t option_, uint8_t time_, uint8_t length_);
+        void reset(uint8_t *id_, size_t length_);
+        void reset(uint8_t *id_, uint8_t option_, uint8_t time_, size_t length_);
         uint8_t position(uint8_t id_, int16_t position_);
         uint8_t position(uint8_t id_, uint8_t option_, int16_t position_, uint16_t time_);
-        void position(uint8_t *id_, int16_t *position_, uint8_t length_);
-        void position(uint8_t *id_, uint8_t option_, int16_t *position_, uint16_t time_, uint8_t length_);
+        void position(uint8_t *id_, int16_t *position_, size_t length_);
+        void position(uint8_t *id_, uint8_t option_, int16_t *position_, uint16_t time_, size_t length_);
         // Advance Commands
         int16_t deg2Pos(float deg_);
-        uint8_t deg2Pos(float *deg, int16_t *pos_, uint8_t length_);
+        uint8_t deg2Pos(float *deg, int16_t *pos_, size_t length_);
         float pos2Deg(int16_t position_);
     protected:
         HardwareSerial *b3mSerial_;
