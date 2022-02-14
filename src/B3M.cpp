@@ -154,26 +154,26 @@ void B3M::reset(void) {
     reset(B3M_BROADCAST_ADDR);
 }
 void B3M::reset(uint8_t id_) {
-    reset(id_, B3M_GET_ERROR, 0x00);
+    reset(id_, 0x00);
 }
-void B3M::reset(uint8_t id_, uint8_t option_, uint8_t time_) {
+void B3M::reset(uint8_t id_, uint8_t time_) {
     uint8_t b3mFormat_[6];
     b3mFormat_[0] = 0x06;
     b3mFormat_[1] = B3M_RESET;
-    b3mFormat_[2] = option_;
+    b3mFormat_[2] = B3M_GET_ERROR;
     b3mFormat_[3] = id_;
     b3mFormat_[4] = time_;
     b3mFormat_[5] = b3mCheckSum_(b3mFormat_, 0x05);
     b3mSend_(b3mFormat_, 0x06);
 }
 void B3M::reset(uint8_t *id_, size_t length_) {
-    reset(id_, B3M_GET_ERROR, 0x00, length_);
+    reset(id_, 0x00, length_);
 }
-void B3M::reset(uint8_t *id_, uint8_t option_, uint8_t time_, size_t length_) {
+void B3M::reset(uint8_t *id_, uint8_t time_, size_t length_) {
     uint8_t b3mFormat_[length_ + 5], b3m_i_;
     b3mFormat_[0] = length_ + 5;
     b3mFormat_[1] = B3M_RESET;
-    b3mFormat_[2] = option_;
+    b3mFormat_[2] = B3M_GET_ERROR;
     for (b3m_i_ = 3; b3m_i_ < (length_ + 3); b3m_i_++) {
         b3mFormat_[b3m_i_] = *id_;
         id_++;
