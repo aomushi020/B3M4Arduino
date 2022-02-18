@@ -143,7 +143,7 @@
 
 class B3M{
     public:
-        uint8_t readBuffer[16];
+        uint8_t buffer[32];
         B3M(HardwareSerial *serialPointer_, uint8_t enPin_);
         B3M(HardwareSerial *serialPointer_, uint8_t enPin_, uint32_t baudrate_, uint32_t timeout_);
         B3M(HardwareSerial *serialPointer_, uint8_t enPin_, uint8_t rxPin_, uint8_t txPin_, uint32_t baudrate_, uint32_t timeout_);
@@ -155,7 +155,7 @@ class B3M{
         uint8_t save(uint8_t id_);
         uint8_t save(uint8_t id_, uint8_t option_);
         void save(uint8_t *id_, size_t length_);
-        uint8_t read(uint8_t id_, uint8_t option_, uint8_t address_, uint8_t bytes_);
+        uint8_t *read(uint8_t id_, uint8_t option_, uint8_t address_, uint8_t bytes_);
         uint8_t write(uint8_t id_, uint8_t *data_, uint8_t bytes_, uint8_t address_);
         uint8_t write(uint8_t id_, uint8_t option_, uint8_t *data_, uint8_t bytes_, uint8_t address_);
         void write(uint8_t *id_, uint8_t *data_, uint8_t bytes_, uint8_t address_, size_t length_);
@@ -170,6 +170,18 @@ class B3M{
         void position(uint8_t *id_, int16_t *position_, size_t length_);
         void position(uint8_t *id_, int16_t *position_, uint16_t time_, size_t length_);
         // Advance Commands
+        // Get Commands
+        // Servo
+        int16_t getPosition(uint8_t id_);
+        int16_t getMcuTemp(uint8_t id_);
+        int16_t getMotorTemp(uint8_t id_);
+        uint16_t getCurrent(uint8_t id_);
+        uint16_t getVoltage(uint8_t id_);
+        // Control
+        // uint8_t getPidGain(uint8_t id_);
+        // void setPidGain(uint8_t id_, uint8_t preset_);
+        // void setPidGain(uint8_t id_, uint8_t preset_, uint32_t p_gain_, uint32_t i_gain_, uint32_t d_gain_);
+        // Other
         int16_t deg2Pos(float deg_);
         uint8_t deg2Pos(float *deg, int16_t *pos_, size_t length_);
         float pos2Deg(int16_t position_);
@@ -179,7 +191,9 @@ class B3M{
         uint32_t b3mBaudrate_, b3mTimeout_;
         uint8_t b3mCheckSum_(uint8_t *send_formats_, uint8_t bytes_);
         void b3mSend_(uint8_t *send_formats_, uint8_t bytes_);
-        uint8_t b3mRead_(uint8_t *returnBuffer_);
+        uint8_t *b3mRead_(uint8_t *returnBuffer_);
+        // int16_t b3mRead_int16(uint8_t *returnBuffer_);
+        // uint16_t b3mRead_uint16(uint8_t *returnBuffer_);
 };
 
 #endif
