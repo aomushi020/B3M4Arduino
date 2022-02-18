@@ -228,73 +228,23 @@ void B3M::position(uint8_t *id_, int16_t *position_, uint16_t time_, size_t leng
 // Advance Commands
 // Servo
 int16_t B3M::getPosition(uint8_t id_){
-    uint8_t *b3m_returnBuffer_ = read(id_, B3M_GET_ERROR, B3M_SERVO_CURRENT_POSITION, 0x02);
-    int16_t b3m_returnData_ = 0;
-    if(*b3m_returnBuffer_ == 0x07){
-        b3m_returnBuffer_ +=4;
-        b3m_returnData_ = *b3m_returnBuffer_;
-        b3m_returnBuffer_ ++;
-        b3m_returnData_ += (*b3m_returnBuffer_<<8);
-        return b3m_returnData_;
-    }else{
-        return 0x0000;
-    }
+    return b3mRead_int16_(id_, B3M_SERVO_CURRENT_POSITION, 0x02);
 }
 
 int16_t B3M::getMcuTemp(uint8_t id_){
-    uint8_t *b3m_returnBuffer_ = read(id_, B3M_GET_ERROR, B3M_SERVO_MCU_TEMP, 0x02);
-    int16_t b3m_returnData_ = 0;
-    if(*b3m_returnBuffer_ == 0x07){
-        b3m_returnBuffer_ +=4;
-        b3m_returnData_ = *b3m_returnBuffer_;
-        b3m_returnBuffer_ ++;
-        b3m_returnData_ += (*b3m_returnBuffer_<<8);
-        return b3m_returnData_;
-    }else{
-        return 0xFFFF;
-    }
+    return b3mRead_int16_(id_, B3M_SERVO_MCU_TEMP, 0x02);
 }
 
 int16_t B3M::getMotorTemp(uint8_t id_){
-    uint8_t *b3m_returnBuffer_ = read(id_, B3M_GET_ERROR, B3M_SERVO_MOTOR_TEMP, 0x02);
-    int16_t b3m_returnData_ = 0;
-    if(*b3m_returnBuffer_ == 0x07){
-        b3m_returnBuffer_ +=4;
-        b3m_returnData_ = *b3m_returnBuffer_;
-        b3m_returnBuffer_ ++;
-        b3m_returnData_ += (*b3m_returnBuffer_<<8);
-        return b3m_returnData_;
-    }else{
-        return 0xFFFF;
-    }
+    return b3mRead_int16_(id_, B3M_SERVO_MOTOR_TEMP, 0x02);
 }
 
 uint16_t B3M::getCurrent(uint8_t id_){
-    uint8_t *b3m_returnBuffer_ = read(id_, B3M_GET_ERROR, B3M_SERVO_CURRENT, 0x02);
-    uint16_t b3m_returnData_ = 0;
-    if(*b3m_returnBuffer_ == 0x07){
-        b3m_returnBuffer_ +=4;
-        b3m_returnData_ = *b3m_returnBuffer_;
-        b3m_returnBuffer_ ++;
-        b3m_returnData_ += (*b3m_returnBuffer_<<8);
-        return b3m_returnData_;
-    }else{
-        return 0x00FF;
-    }
+    return b3mRead_uint16_(id_, B3M_SERVO_CURRENT, 0x02);
 }
 
 uint16_t B3M::getVoltage(uint8_t id_){
-    uint8_t *b3m_returnBuffer_ = read(id_, B3M_GET_ERROR, B3M_SERVO_VOLTAGE, 0x02);
-    uint16_t b3m_returnData_ = 0;
-    if(*b3m_returnBuffer_ == 0x07){
-        b3m_returnBuffer_ +=4;
-        b3m_returnData_ = *b3m_returnBuffer_;
-        b3m_returnBuffer_ ++;
-        b3m_returnData_ += (*b3m_returnBuffer_<<8);
-        return b3m_returnData_;
-    }else{
-        return 0x00FF;
-    }
+    return b3mRead_uint16_(id_, B3M_SERVO_VOLTAGE, 0x02);
 }
 // Control
 
@@ -349,4 +299,32 @@ uint8_t *B3M::b3mRead_(uint8_t *returnBuffer_) {
         b3m_length_++;
     }
     return b3m_length_;
+}
+
+int16_t B3M::b3mRead_int16_(uint8_t id_, uint8_t address_, uint8_t bytes_){
+    uint8_t *b3m_returnBuffer_ = read(id_, B3M_GET_ERROR, address_, bytes_);
+    int16_t b3m_returnData_ = 0;
+    if(*b3m_returnBuffer_ == 0x07){
+        b3m_returnBuffer_ +=4;
+        b3m_returnData_ = *b3m_returnBuffer_;
+        b3m_returnBuffer_ ++;
+        b3m_returnData_ += (*b3m_returnBuffer_<<8);
+        return b3m_returnData_;
+    }else{
+        return 0xFFFF;
+    }
+}
+
+uint16_t B3M::b3mRead_uint16_(uint8_t id_, uint8_t address_, uint8_t bytes_){
+    uint8_t *b3m_returnBuffer_ = read(id_, B3M_GET_ERROR, address_, bytes_);
+    uint16_t b3m_returnData_ = 0;
+    if(*b3m_returnBuffer_ == 0x07){
+        b3m_returnBuffer_ +=4;
+        b3m_returnData_ = *b3m_returnBuffer_;
+        b3m_returnBuffer_ ++;
+        b3m_returnData_ += (*b3m_returnBuffer_<<8);
+        return b3m_returnData_;
+    }else{
+        return 0x00FF;
+    }
 }

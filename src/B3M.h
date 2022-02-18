@@ -192,8 +192,9 @@ class B3M{
         uint8_t b3mCheckSum_(uint8_t *send_formats_, uint8_t bytes_);
         void b3mSend_(uint8_t *send_formats_, uint8_t bytes_);
         uint8_t *b3mRead_(uint8_t *returnBuffer_);
-        // int16_t b3mRead_int16(uint8_t *returnBuffer_);
-        // uint16_t b3mRead_uint16(uint8_t *returnBuffer_);
+        int16_t b3mRead_int16_(uint8_t id_, uint8_t address_, uint8_t bytes_);
+        uint16_t b3mRead_uint16_(uint8_t id_, uint8_t address_, uint8_t bytes_);
 };
+
 
 #endif
